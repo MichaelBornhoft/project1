@@ -15,8 +15,8 @@ import com.revature.service.facultyServiceImpl;
 public class EmployeeDriver {
 	private static Logger logger = Logger.getLogger(EmployeeDriver.class);
 	private static EmployeeService EmployeeService = new EmployeeServiceImpl();
-	private static class_uarkService Class_uarkService = new class_uarkServiceImpl(); 
-	private static facultyService FacultyService = new facultyServiceImpl();
+	//private static class_uarkService Class_uarkService = new class_uarkServiceImpl(); 
+	//private static facultyService FacultyService = new facultyServiceImpl();
 	
 	public static void mainMenu(String[] args) {
 		EmployeePortal1(); 

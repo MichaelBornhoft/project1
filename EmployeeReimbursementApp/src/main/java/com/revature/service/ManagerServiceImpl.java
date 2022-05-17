@@ -16,6 +16,10 @@ public class ManagerServiceImpl implements ManagerService{
 	private ManagerDAO udao;
 	private static Logger log = Logger.getLogger(ManagerServiceImpl.class);
 	
+	public ManagerServiceImpl() {
+		super();
+	}
+
 	//introducing dependency injection through use of a construction injection
 	//so we are not manually injecting what we need for this class; we are handing that control over to the application
 	public ManagerServiceImpl(ManagerDAOImpl dao) {
