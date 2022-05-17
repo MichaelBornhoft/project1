@@ -4,20 +4,23 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.revature.dao.ERSMainDAO;
-import com.revature.dao.ERSMainDAOImpl;
-import com.revature.models.ERSMain;
+import com.revature.dao.*;
+import com.revature.models.*;
 
 public class ERSMainServiceImpl implements ERSMainService {
 
-private ERSMainDAO emdao;	
-private static Logger log = Logger.getLogger(ERSMainServiceImpl.class);	
-
-
-public ERSMainServiceImpl(ERSMainDAOImpl dao) {
-	super();
-	this.emdao = dao; 
-}
+	private ERSMainDAO emdao;	
+	
+	private ERSApprovedDao approved;
+	private ERSDeniedDao denied;
+	
+	private static Logger log = Logger.getLogger(ERSMainServiceImpl.class);	
+	
+	
+	public ERSMainServiceImpl(ERSMainDAOImpl dao) {
+		super();
+		this.emdao = dao; 
+	}
 	
 	
 	@Override
@@ -29,6 +32,12 @@ public ERSMainServiceImpl(ERSMainDAOImpl dao) {
 	@Override
 	public ERSMain findTicketById(int ticketId) {
 		log.info("in service layer. searching Tickets by id: " + ticketId);
+		
+		if (emdao.selectById(ticketId) != null) {
+			return emdao.selectById(ticketId);
+		}else if (approved.selectById(ticketId) != null) {
+			return ;
+		}else
 		return emdao.selectById(ticketId);
 	}
 

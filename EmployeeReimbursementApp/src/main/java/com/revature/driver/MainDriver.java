@@ -17,6 +17,7 @@ public class MainDriver {
 
 	public static void welcomeScreen() {
 		Scanner scanner = new Scanner(System.in);
+		ManagerDriver mDriver = new ManagerDriver();
 		
 		logger.info("Starting application. Loading welcome screen...");
 		System.out.println("Welcome to the Employee Reimbursement App!");
@@ -34,7 +35,7 @@ public class MainDriver {
 
 			break;
 		
-		case 2: ManagerDriver.managerPortal(); 
+		case 2: mDriver.managerPortal1(); 
 		
 			break; 
 		
