@@ -1,20 +1,16 @@
 package com.revature.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
-import com.revature.dao.EmployeeDAO;
 import com.revature.dao.ManagerDAO;
 import com.revature.dao.ManagerDAOImpl;
-import com.revature.models.Employee;
 import com.revature.models.Manager;
 
 public class ManagerServiceImpl implements ManagerService{
 	
 	private ManagerDAO udao;
-	private EmployeeDAO edao; 
 	private static Logger log = Logger.getLogger(ManagerServiceImpl.class);
 	
 	public ManagerServiceImpl() {
@@ -63,12 +59,4 @@ public class ManagerServiceImpl implements ManagerService{
 		log.info("in service layer. removing Manager: " + Manager);
 		return udao.delete(Manager);
 	}
-
-	@Override
-	public List<Employee> findAllEmployees() {
-		log.info("in service layer. finding all Employees...");
-		return edao.selectAll();
-}
-
-	
 }

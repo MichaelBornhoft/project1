@@ -61,19 +61,17 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 	}
 
 	@Override
-	public ERSMain selectByemployeeTicketId(int employeeId) {
+	public List<ERSMain>  selectByemployeeTicketId(int employeeId) {
 		log.info("searching ticket by employee_ticket_id: " + employeeId);
 
 		Session ses = HibernateUtil.getSession();
 
-		ERSMain ticket = (ERSMain) ses
-				.createNativeQuery("SELECT * FROM ERS_Approved WHERE Approved_employee_ticket_id = " + employeeId + "",
-						ERSMain.class)
-				.getSingleResult();
+		List<ERSMain> tickets = ses
+				.createNativeQuery("SELECT * FROM ERS_Approved WHERE Approved_employee_ticket_id = " + employeeId + "", ERSMain.class).list();
+		
+		log.info("Search complete! Found: " + tickets.size() + " results");
 
-		log.info("Search complete! Found: " + ticket);
-
-		return ticket;
+		return tickets;
 	}
 
 	@Override

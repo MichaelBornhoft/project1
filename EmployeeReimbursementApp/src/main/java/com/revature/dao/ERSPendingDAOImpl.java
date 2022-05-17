@@ -60,20 +60,19 @@ public class ERSPendingDAOImpl implements ERSMainDAO {
 		return ticket;
 	}
 
-	@Override
-	public ERSMain selectByemployeeTicketId(int employeeId) {
+	@Override	
+	public List<ERSMain>  selectByemployeeTicketId(int employeeId) {
 		log.info("searching ticket by employee_ticket_id: " + employeeId);
 
 		Session ses = HibernateUtil.getSession();
 
-		ERSMain ticket = (ERSMain) ses
+		List<ERSMain> tickets = ses
 				.createNativeQuery("SELECT * FROM ERS_Pending WHERE Pending_employee_ticket_id = " + employeeId + "",
-						ERSMain.class)
-				.getSingleResult();
+						ERSMain.class).list();
+		
+		log.info("Search complete! Found: " + tickets.size() + " results");
 
-		log.info("Search complete! Found: " + ticket);
-
-		return ticket;
+		return tickets;
 	}
 
 	@Override

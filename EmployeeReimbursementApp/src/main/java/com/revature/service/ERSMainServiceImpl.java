@@ -46,21 +46,21 @@ public class ERSMainServiceImpl implements ERSMainService {
 		}else if (approved.selectById(ticketId) != null) {
 			return approved.selectById(ticketId);
 		}else {
-			return denied.selectByemployeeTicketId(ticketId);
+			return denied.selectById(ticketId);
 		}
 	}
 
 	@Override
-	public ERSMain findTicketByEmployee_Id(int employeeId) {
+	public List<ERSMain> findTicketsByEmployee_Id(int employeeId) {
 		log.info("in service layer. searching for ticket by employee id: " + employeeId);
+		List<ERSMain> tickets = new ArrayList<>();
+		tickets.addAll(pending.selectByemployeeTicketId(employeeId));
+		tickets.addAll(approved.selectByemployeeTicketId(employeeId));
+		tickets.addAll(denied.selectByemployeeTicketId(employeeId));
 		
-		if (pending.selectById(employeeId) != null) {
-			return pending.selectById(employeeId);
-		}else if (approved.selectById(employeeId) != null) {
-			return approved.selectById(employeeId);
-		}else {
-			return denied.selectByemployeeTicketId(employeeId);
-		}
+		tickets = tickets.stream().sorted(Comparator.comparingInt(ERSMain::getTicketId)).collect(Collectors.toList());
+		
+		return tickets;
 	}
 
 	@Override

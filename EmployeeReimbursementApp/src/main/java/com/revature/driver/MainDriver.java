@@ -10,14 +10,12 @@ public class MainDriver {
 
 	public static void main(String[] args) {
 		welcomeScreen();
-		
-		
-
 	}
 
 	public static void welcomeScreen() {
 		Scanner scanner = new Scanner(System.in);
 		ManagerDriver mDriver = new ManagerDriver();
+		EmployeeDriver eDriver = new EmployeeDriver();
 		
 		logger.info("Starting application. Loading welcome screen...");
 		System.out.println("Welcome to the Employee Reimbursement App!");
@@ -31,7 +29,7 @@ public class MainDriver {
 		
 		
 		switch (userPick) {
-		case 1: EmployeeDriver.EmployeePortal1();
+		case 1: eDriver.mainMenu();
 
 			break;
 		

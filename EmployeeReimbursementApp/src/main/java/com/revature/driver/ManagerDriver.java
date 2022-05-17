@@ -30,7 +30,6 @@ public class ManagerDriver {
 	private List<ERSMain> allReqs = new ArrayList<ERSMain>();
 	
 	
-	
 	public ManagerDriver() {
 		super();
 		in = new Scanner(System.in);
@@ -39,13 +38,13 @@ public class ManagerDriver {
 	//private static class_uarkService Class_uarkService = new class_uarkServiceImpl(); 
 	//private static facultyService FacultyService = new facultyServiceImpl();
 	
-	public void mainMenu(String[] args) {
+	public void mainMenu() {
 		logger.info("\nWelcome to the Manager portal!");
 		login();
 		managerPortal1(); 
 	}
 
-	public void login() {
+	private void login() {
 		String username = "";
 		String password = "";
 		
@@ -101,10 +100,9 @@ public class ManagerDriver {
 		int ManagerPick = Integer.parseInt(scanner.nextLine());
 		 
 		switch(ManagerPick) {
-		case 1:  
+		case 1:
 			logger.info("In driver class: User chose option 1 (View all employees)...");
 			viewAll();
-			managerPortal1();
 			break; 
 		case 0: 
 		logger.info("In driver class: User chose option 0 (close app)...");
@@ -136,38 +134,52 @@ public class ManagerDriver {
 		//prompt for input
 		System.out.print("Input: ");
 		
-		allReqs = getAll();
-		
 		int ManagerPick = Integer.parseInt(in.nextLine());
 		 
 		switch(ManagerPick) {
 		case 1:
 			logger.info("In driver class: User chose option 1 (Display all employees)...");
-			getAllEmployees();
+			allEmps = getAllEmployees();
+			displayEmployees(allEmps);
 			viewAll();
 			break;
 		case 2:
 			logger.info("In driver class: User chose option 2 (Display all requests)...");
+			allReqs = getAll();
+			displayTickets(allReqs);
 			viewAll();
 			break;
 		case 3:
 			logger.info("In driver class: User chose option 3 (Display all pending requests)...");
+			allReqs = getAllPending();
+			displayTickets(allReqs);			
 			viewAll();
 			break;
 		case 4:
 			logger.info("In driver class: User chose option 4 (Display all approved requests)...");
+			allReqs = getAllApproved();
+			displayTickets(allReqs);
 			viewAll();
 			break;
 		case 5:
 			logger.info("In driver class: User chose option 5 (Display all denied requests)...");
+			allReqs = getAllDenied();
+			displayTickets(allReqs);
 			viewAll();
 			break;
 		case 6:
 			logger.info("In driver class: User chose option 6 (Display all from single employee)...");
+			System.out.println("Please eneter an employee ID");
+			int tempInput = Integer.parseInt(in.nextLine());
+			allReqs = getAllFromOne(tempInput);
+			displayTickets(allReqs);
 			viewAll();
 			break;
 		case 7:
 			logger.info("In driver class: User chose option 7 (Select by ticket ID)...");
+			System.out.println("Please eneter an employee ID");
+			int tempTicket = Integer.parseInt(in.nextLine());
+			select(tempTicket);
 			viewAll();
 			break;
 		case 0: 
@@ -199,20 +211,47 @@ public class ManagerDriver {
 	}
 	
 	private List<ERSMain> getAllFromOne(int employeeId) {
+		return TService.findTicketsByEmployee_Id(employeeId);
 	}
 
 	private List<Employee> getAllEmployees() {
-		EService.(employeeId);
-		
+		return EService.findAllEmployees();
 	}
 	
 	private void displayTickets(List<ERSMain> tickets) {
 		tickets.forEach((n) -> System.out.println(n));
 	}
 	
+	private void displayEmployees(List<Employee> employees) {
+		employees.forEach((n) -> System.out.println(n));
+	}
+	
 	private void select(int index) {
-		ERSMain temp = allReqs.get(index);
+		ERSMain temp = TService.findTicketById(index);
 		
+		System.out.println(temp);
+		System.out.println("\n\n Approve(1) or deny(0)?");
 		
+		int ManagerPick = Integer.parseInt(in.nextLine());
+		 
+		switch(ManagerPick) {
+		case 1:  
+			logger.info("In driver class: User chose option 1 (Approve request)...");
+			System.out.println("Request approved\n\n");
+			
+			TService.approve(temp);
+			break; 
+		case 0: 
+			logger.info("In driver class: User chose option 0 (Deny request)...");
+			System.out.println("Request denied\n\n");
+
+			TService.deny(temp);
+			break; 
+		default:
+			logger.info("In ManagerDriver class: User performed invalid actions...");
+			System.out.println("Invalid selection. Try again.");
+			select(index);
+			break;
+		}
 	}
 }
