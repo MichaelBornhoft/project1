@@ -7,14 +7,20 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
+import com.revature.models.ERSMain;
+import com.revature.models.Employee;
 import com.revature.models.Manager;
-import com.revature.models.*;
+import com.revature.service.ERSMainServiceImpl;
+import com.revature.service.EmployeeService;
+import com.revature.service.EmployeeServiceImpl;
 import com.revature.service.ManagerService;
 import com.revature.service.ManagerServiceImpl;
 
 public class ManagerDriver {
 	private static Logger logger = Logger.getLogger(ManagerDriver.class);
-	private static ManagerService MService = new ManagerServiceImpl();
+	private ManagerService MService = new ManagerServiceImpl();
+	private ERSMainServiceImpl TService = new ERSMainServiceImpl();
+	private EmployeeService EService = new EmployeeServiceImpl();
 	
 	private Manager current = null;
 	
@@ -130,6 +136,8 @@ public class ManagerDriver {
 		//prompt for input
 		System.out.print("Input: ");
 		
+		allReqs = getAll();
+		
 		int ManagerPick = Integer.parseInt(in.nextLine());
 		 
 		switch(ManagerPick) {
@@ -175,34 +183,36 @@ public class ManagerDriver {
 	}
 
 	private List<ERSMain> getAll() {
-		
+		return TService.finadallTickets();
 	}
 	
 	private List<ERSMain> getAllPending() {
-		
+		return TService.finadallPending();
 	}
 	
 	private List<ERSMain> getAllApproved() {
-		
+		return TService.finadallApproved();
 	}
 	
 	private List<ERSMain> getAllDenied() {
-		
+		return TService.finadallDenied();
 	}
 	
 	private List<ERSMain> getAllFromOne(int employeeId) {
-		
 	}
 
 	private List<Employee> getAllEmployees() {
-	
+		EService.(employeeId);
+		
 	}
 	
+	private void displayTickets(List<ERSMain> tickets) {
+		tickets.forEach((n) -> System.out.println(n));
+	}
 	
-	
-	private ERSMain select(int index) {
-		ERSMain temp = null;
+	private void select(int index) {
+		ERSMain temp = allReqs.get(index);
 		
-		return ;
+		
 	}
 }

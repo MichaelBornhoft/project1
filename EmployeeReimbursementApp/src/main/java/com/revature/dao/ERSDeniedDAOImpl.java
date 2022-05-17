@@ -6,12 +6,12 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.revature.models.ERSApproved;
+import com.revature.models.ERSDenied;
 import com.revature.models.ERSMain;
 import com.revature.util.HibernateUtil;
 
-public class ERSApprovedDAOImpl implements ERSMainDAO {
-	private static Logger log = Logger.getLogger(ERSApprovedDAOImpl.class);
+public class ERSDeniedDAOImpl implements ERSMainDAO {
+	private static Logger log = Logger.getLogger(ERSDeniedDAOImpl.class);
 
 	@Override
 	public int insert(ERSMain ticket) {
@@ -44,6 +44,24 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 		log.info("insert successful! New ticket id is " + pk);
 		return pk; // return the auto-generated pk
 	}
+	
+
+	public int insertToDenied(ERSMain ticket) {
+		log.info("adding ticket to database table denied. ticket info: " + ticket);
+
+		ERSDenied denied = new ERSDenied(ticket);
+
+		Session ses = HibernateUtil.getSession();
+
+		Transaction tx = ses.beginTransaction();
+
+		int pk = (int) ses.save(denied);
+
+		tx.commit();
+
+		log.info("insert successful! New ticket id is " + pk);
+		return pk; // return the auto-generated pk
+	}
 
 	@Override
 	public ERSMain selectById(int ticketId) {
@@ -52,7 +70,7 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 		Session ses = HibernateUtil.getSession();
 
 		ERSMain ticket = (ERSMain) ses
-				.createNativeQuery("SELECT * FROM ERS_Approved WHERE Approved_ticket_id = " + ticketId + "", ERSMain.class)
+				.createNativeQuery("SELECT * FROM ERS_Denied WHERE denied_ticket_id = " + ticketId + "", ERSMain.class)
 				.getSingleResult();
 
 		log.info("Search complete! Found: " + ticket);
@@ -67,7 +85,7 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 		Session ses = HibernateUtil.getSession();
 
 		ERSMain ticket = (ERSMain) ses
-				.createNativeQuery("SELECT * FROM ERS_Approved WHERE Approved_employee_ticket_id = " + employeeId + "",
+				.createNativeQuery("SELECT * FROM ERS_Denied WHERE denied_employee_ticket_id = " + employeeId + "",
 						ERSMain.class)
 				.getSingleResult();
 
@@ -80,7 +98,7 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 	public List<ERSMain> selectAll() {
 		log.info("getting all Tickets from database....");
 		Session ses = HibernateUtil.getSession();
-		List<ERSMain> ERSMainList = ses.createQuery("from ERS_Approved", ERSMain.class).list();
+		List<ERSMain> ERSMainList = ses.createQuery("from ERS_Denied", ERSMain.class).list();
 		log.info("ERSMain list retrieved! Size: " + ERSMainList.size());
 		return ERSMainList;
 	}
@@ -89,7 +107,7 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 	public boolean update(ERSMain ticket) {
 		log.info("Updating Ticket. Ticket info: " + ticket);
 
-		ERSApproved Approved = new ERSApproved(ticket);
+		ERSDenied denied = new ERSDenied(ticket);
 		
 		Session ses = HibernateUtil.getSession();
 
@@ -97,7 +115,7 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 
 		ses.clear();
 
-		ses.update(Approved);
+		ses.update(denied);
 
 		tx.commit();
 
@@ -110,7 +128,7 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 	public boolean delete(ERSMain ticket) {
 		log.info("Deleting Ticket. Ticket info: " + ticket);
 
-		ERSApproved Approved = new ERSApproved(ticket);
+		ERSDenied denied = new ERSDenied(ticket);
 		
 		Session ses = HibernateUtil.getSession();
 
@@ -118,7 +136,7 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 
 		ses.clear();
 
-		ses.delete(Approved);
+		ses.delete(denied);
 
 		tx.commit();
 
@@ -126,4 +144,5 @@ public class ERSApprovedDAOImpl implements ERSMainDAO {
 
 		return true;
 	}
+
 }
