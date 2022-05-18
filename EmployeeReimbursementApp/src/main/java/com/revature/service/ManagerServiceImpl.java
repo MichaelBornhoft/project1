@@ -1,14 +1,11 @@
 package com.revature.service;
 
-
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
-
 import com.revature.dao.ManagerDAO;
 import com.revature.dao.ManagerDAOImpl;
-
 import com.revature.models.Manager;
 
 public class ManagerServiceImpl implements ManagerService{
@@ -16,6 +13,10 @@ public class ManagerServiceImpl implements ManagerService{
 	private ManagerDAO udao;
 	private static Logger log = Logger.getLogger(ManagerServiceImpl.class);
 	
+	public ManagerServiceImpl() {
+		super();
+	}
+
 	//introducing dependency injection through use of a construction injection
 	//so we are not manually injecting what we need for this class; we are handing that control over to the application
 	public ManagerServiceImpl(ManagerDAOImpl dao) {
@@ -58,8 +59,4 @@ public class ManagerServiceImpl implements ManagerService{
 		log.info("in service layer. removing Manager: " + Manager);
 		return udao.delete(Manager);
 	}
-
-	
-
-	
 }
