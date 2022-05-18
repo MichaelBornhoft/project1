@@ -11,7 +11,7 @@ public interface ERSMainService {
 	
 	public ERSMain findTicketById(int ticketId);
 	
-	public ERSMain findTicketByEmployee_Id(int id);
+	public List<ERSMain> findTicketsByEmployee_Id(int id);
 	
 	//this will let you edit whole ticket, but you can just edit status here. 
 	public boolean editTicketStatus(ERSMain ticket);

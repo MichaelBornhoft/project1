@@ -16,9 +16,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 	
 	//introducing dependency injection through use of a construction injection
 	//so we are not manually injecting what we need for this class; we are handing that control over to the application
-	public EmployeeServiceImpl(EmployeeDAOImpl dao) {
+	public EmployeeServiceImpl() {
 		super();
-		this.edao = dao; //this is the same as this: private static EmployeeDAO udao = new EmployeeDAOImpl();
+		this.edao = new EmployeeDAOImpl(); //this is the same as this: private static EmployeeDAO udao = new EmployeeDAOImpl();
 	}
 
 	@Override

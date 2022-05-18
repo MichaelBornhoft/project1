@@ -12,7 +12,7 @@ public interface ERSMainDAO {
 
 	public ERSMain selectById(int ticketId);
 
-	public ERSMain selectByemployeeTicketId(int employeeId);
+	public List<ERSMain> selectByemployeeTicketId(int employeeId);
 
 	public List<ERSMain> selectAll();
 

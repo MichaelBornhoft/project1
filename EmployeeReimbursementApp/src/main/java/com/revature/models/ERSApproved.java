@@ -7,9 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
-
-
 @Entity
 @Table(name = "ERS_Approved") // now the table will show up as 'tickets' instead of 'ticket' (the name of the
 							// class) in the database
@@ -18,6 +15,11 @@ public class ERSApproved {
 	
 		private Employee emdao;
 		private ERSMain erm; 
+
+		public ERSApproved(ERSMain erm) {
+			super();
+			this.erm = erm;
+		}
 
 		@Id // specifies this field as a primary key
 		@Column(name = "approved_ticket_id")
