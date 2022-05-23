@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import com.revature.models.Employee;
 import com.revature.util.HibernateUtil;
@@ -34,11 +35,18 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		
 		Session ses = HibernateUtil.getSession();
 		
-		Employee Employee = (Employee) ses.createNativeQuery("SELECT * FROM store_Employees WHERE store_Employee_id = " + id + "", Employee.class).getSingleResult();
+		Employee empl = (Employee) ses.createNativeQuery("SELECT * FROM employees WHERE employee_id = '" + id + "'", Employee.class);
 		
-		log.info("Search complete! Found: " + Employee);
+//		query.executeUpdate();
+//		Employee empl = new Employee();
 		
-		return Employee;
+//		empl.setEmployeeId(Integer.valueOf(query.getParameter(0).toString()));
+//		empl.setEmployeeName(query.getParameter(1).toString());
+//		empl.setPassword(query.getParameter(2).toString());
+		
+		log.info("Search complete! Found: " + empl);
+		
+		return empl;
 	}
 
 	@Override

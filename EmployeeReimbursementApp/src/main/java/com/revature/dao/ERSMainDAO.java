@@ -16,7 +16,7 @@ public interface ERSMainDAO {
 	
 	public List<ERSMain> selectByTicketsStatus(String ticketStatus);
 	
-	public ERSMain selectTicketByStatus (String ticketStatus); 
+//	public ERSMain selectTicketByStatus (String ticketStatus); 
 
 	public List<ERSMain> selectAll();
 

@@ -20,7 +20,7 @@ public class EmployeeReimburseApp extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//save the URI and rewrite it to determine what functionality the Employee is requesting based on that endpoint
-		final String URI = req.getRequestURI().replace("/EmployeeReimburseApp/", "");
+		final String URI = req.getRequestURI().replace("/EmployeeReimbursementApp/", "");
 		log.info("URI: " + URI);
 		
 		switch (URI) {
@@ -64,7 +64,7 @@ public class EmployeeReimburseApp extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//save the URI and rewrite it to determine what functionality the Employee is requesting based on that endpoint
-		final String URI = req.getRequestURI().replace("/EmployeeReimburseApp/", "");
+		final String URI = req.getRequestURI().replace("/EmployeeReimbursementApp/", "");
 		log.info("URI: " + URI);
 		
 		switch (URI) {
@@ -90,7 +90,7 @@ public class EmployeeReimburseApp extends HttpServlet {
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//save the URI and rewrite it to determine what functionality the Employee is requesting based on that endpoint
-		final String URI = req.getRequestURI().replace("/EmployeeReimburseApp/", "");
+		final String URI = req.getRequestURI().replace("/EmployeeReimbursementApp/", "");
 		log.info("URI: " + URI);
 		
 		switch (URI) {

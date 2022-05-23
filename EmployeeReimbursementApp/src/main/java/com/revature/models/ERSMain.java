@@ -2,11 +2,16 @@ package com.revature.models;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 //JPA is the Java Persistence API
@@ -16,8 +21,6 @@ import javax.persistence.Table;
 @Table(name = "ERS_Ticket") // now the table will show up as 'tickets' instead of 'ticket' (the name of the
 							// class) in the database
 public class ERSMain {
-	private Employee emdao;
-	private Manager mandao; 
 
 	@Id // specifies this field as a primary key
 	@Column(name = "ticket_id")
@@ -25,16 +28,16 @@ public class ERSMain {
 	private int ticketId;
 
 	// this is to map employee id to a request.
-	@Column(name = "employee_ticket_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int employeeTicketId;
-	
-	@Column(name = "manager_ticket_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int managerTicketId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="Employee_id", referencedColumnName = "Employee_id", nullable = false)
+	private Employee emdao;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="Manager_id", referencedColumnName = "Manager_id")
+	private Manager mandao;
 
 	@Column(name = "ticket_name", unique = true, nullable = false) // similar to adding UNIQUE NOT NULL constraint in //
-																	// SQL
+																		// SQL
 	private String ticketName;
 
 	@Column(name = "ticket_description", unique = true, nullable = false)
@@ -53,26 +56,26 @@ public class ERSMain {
 		super();
 	}
 
-	public ERSMain(String ticketName, String description, double ticketAmount, String ticketStatus) {
+	public ERSMain(String ticketName,Employee employeeTicket, String description, double ticketAmount, String ticketStatus) {
 		super();
 		this.ticketName = ticketName;
+		this.emdao = employeeTicket;
 		this.description = description;
 		this.ticketAmount = ticketAmount;
 		this.ticketStatus = ticketStatus;
 	}
 
-	public ERSMain(int ticketId, int employeeTicketId, int managerTicketId, String ticketName, String description, double ticketAmount,
+	public ERSMain(int ticketId, Employee employeeTicket, Manager managerTicket, String ticketName, String description, double ticketAmount,
 			String ticketStatus) {
 		super();
 		this.ticketId = ticketId;
+		this.emdao = employeeTicket;
+		this.mandao = managerTicket;
 		this.ticketName = ticketName;
 		this.description = description;
 		this.ticketAmount = ticketAmount;
 		this.ticketStatus = ticketStatus;
 	}
-		
-	
-	
 	
 	public int getTicketId() {
 		return ticketId;

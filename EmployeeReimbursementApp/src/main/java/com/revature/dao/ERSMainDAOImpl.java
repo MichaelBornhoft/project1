@@ -118,20 +118,20 @@ public class ERSMainDAOImpl implements ERSMainDAO {
 		
 	}
 
-	@Override
-	public ERSMain selectTicketByStatus(String ticketStatus) {
-		log.info("searching ticket by ticket_status: " + ticketStatus);
-
-		Session ses = HibernateUtil.getSession();
-
-		ERSMain ticket = (ERSMain) ses
-				.createNativeQuery("SELECT * FROM ERS_Ticket WHERE ticket_status = " + ticketStatus + "", ERSMain.class)
-				.getSingleResult();
-
-		log.info("Search complete! Found: " + ticket);
-
-		return ticket;
-	}
+//	@Override
+//	public ERSMain selectTicketByStatus(String ticketStatus) {
+//		log.info("searching ticket by ticket_status: " + ticketStatus);
+//
+//		Session ses = HibernateUtil.getSession();
+//
+//		ERSMain ticket = (ERSMain) ses
+//				.createNativeQuery("SELECT * FROM ERS_Ticket WHERE ticket_status = " + ticketStatus + "", ERSMain.class)
+//				.getSingleResult();
+//
+//		log.info("Search complete! Found: " + ticket);
+//
+//		return ticket;
+//	}
 
 	
 

@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class Employee {
 
 	@Id // specifies this field as a primary key
-	@Column(name = "Employee_id")
+	@Column(name = "Employee_id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // this is equivalent to the SERIAL keyword in SQL
 	private int employeeId;
 

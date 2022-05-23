@@ -29,9 +29,9 @@ import com.revature.service.ManagerServiceImpl;
 
 public class RequestHelper {
 	
-	private static ManagerService Managerv = new ManagerServiceImpl(new ManagerDAOImpl());
-	private static EmployeeService Employeev = new EmployeeServiceImpl(new EmployeeDAOImpl());
-	 static ERSMainService ERSMainv = new ERSMainServiceImpl(new ERSMainDAOImpl());
+	static EmployeeServiceImpl EService = new EmployeeServiceImpl(new EmployeeDAOImpl());
+	static ManagerServiceImpl MService = new ManagerServiceImpl(new ManagerDAOImpl());
+	static ERSMainService ERSMainv = new ERSMainServiceImpl(new ERSMainDAOImpl());
 	private static Logger log = Logger.getLogger(RequestHelper.class);
 	private static ObjectMapper om = new ObjectMapper();
 	
@@ -100,39 +100,31 @@ public class RequestHelper {
 	
 	public static void processNewTicket(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		log.info("inside of request helper...process new ticket...");
-		BufferedReader reader = request.getReader();
-		StringBuilder s = new StringBuilder();
 
-		// we are just transferring our Reader data to our StringBuilder, line by line
-		String line = reader.readLine();
-		while (line != null) {
-			s.append(line);
-			line = reader.readLine();
-		}
-
-		String body = s.toString(); 
-		String [] sepByAmp = body.split("&"); // separate Employeename=bob&password=pass -> [Employeename=bob, password=pass]
-		
-		List<String> values = new ArrayList<String>();
-		List<Integer> ovalues = new ArrayList<Integer>();
-		
-		for (String pair : sepByAmp) { // each element in array looks like this
-			values.add(pair.substring(pair.indexOf("=") + 1)); // trim each String element in the array to just value -> [bob, pass]
-		}
-		log.info("Ticket attempted to register with information:\n " + body);
 		// capture the actual Employeename and password values
-		int ticketId = ovalues.get(0);
-		int employeeTicketId = ovalues.get(1);
-		int managerTicketId = ovalues.get(2);
-		String ticketName = values.get(3); // bob
-		String description = values.get(4); // pass
-		double ticketAmount = ovalues.get(5);
-		String ticketStatus = values.get(6);
+		String ticketName = request.getParameter("ticketName");
+		String employeeTicketIdTemp = request.getParameter("employeeTicketID");
+		String description = request.getParameter("description");
+		String ticketAmountTemp = request.getParameter("ticketAmount");
 		
-		ERSMain t = new ERSMain(ticketId, employeeTicketId, managerTicketId, ticketName, description, ticketAmount, ticketStatus);
-		int targetId = ERSMainv.newTicket(t);
+		log.info(employeeTicketIdTemp);
+		log.info(ticketAmountTemp);
+		
+		int employeeTicketId = Integer.parseInt(employeeTicketIdTemp);
+		double ticketAmount = Double.parseDouble(ticketAmountTemp);
+		
+		log.info("Ticket attempted to register with information:\n " + 
+				ticketName + ", " +
+				employeeTicketId + ", " +
+				description + ", " +
+				ticketAmount);
 
-		if (targetId != 0) {
+		Employee e = EService.findEmployeeById(employeeTicketId);
+		ERSMain t = new ERSMain(ticketName, e, description, ticketAmount, "pending");
+		log.info("this ran");
+		int targetId = ERSMainv.newTicket(t);
+		log.info("this ran");
+		if (targetId >= 0) {
 			PrintWriter pw = response.getWriter();
 			t.setTicketId(targetId);
 			log.info("New Ticket: " + t);
@@ -308,7 +300,7 @@ public class RequestHelper {
 		resp.setContentType("application/json");
 		
 		// 2. get a list of all Employees in the database
-		List<Employee> allEmployees = Employeev.findAllEmployees();
+		List<Employee> allEmployees = EService.findAllEmployees();
 		// 3. turn that list of java objects into a JSON string (using Jackson)
 		String json = om.writeValueAsString(allEmployees);
 		
@@ -354,7 +346,7 @@ public class RequestHelper {
 			
 			// 2. Get Employee in the Database by id
 			int id = Integer.parseInt(values.get(0));
-			Employee Employee = Employeev.findEmployeeById(id);
+			Employee Employee = EService.findEmployeeById(id);
 			
 			// 3. Turn the list of Java Objects into a JSON string (using Jackson Databind Object Mapper).
 			String json = om.writeValueAsString(Employee);
@@ -368,37 +360,21 @@ public class RequestHelper {
 	
 	public static void processNewEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		log.info("inside of request helper...process new Employee...");
-		BufferedReader reader = request.getReader();
-		StringBuilder s = new StringBuilder();
-
-		// we are just transferring our Reader data to our StringBuilder, line by line
-		String line = reader.readLine();
-		while (line != null) {
-			s.append(line);
-			line = reader.readLine();
-		}
-
-		String body = s.toString(); 
-		String [] sepByAmp = body.split("&"); // separate Employeename=bob&password=pass -> [Employeename=bob, password=pass]
-		
-		List<String> values = new ArrayList<String>();
-		List<Integer> ovalues = new ArrayList<Integer>();
-		
-		for (String pair : sepByAmp) { // each element in array looks like this
-			values.add(pair.substring(pair.indexOf("=") + 1)); // trim each String element in the array to just value -> [bob, pass]
-		}
-		log.info("Ticket attempted to register with information:\n " + body);
 		// capture the actual Employeename and password values
-		int employeeId = ovalues.get(0);
-		String employeeName = values.get(1);
-		String employeePassword = values.get(2);
+		String employeeName = request.getParameter("employeeName");
+		String employeePassword = request.getParameter("employeePassword");
+		 
 		
+		log.info("Ticket attempted to register with information:\n " + 
+				employeeName + ", " +
+				employeePassword);
 		
-		
-		Employee e = new Employee(employeeId, employeeName, employeePassword);
-		int targetId = Employeev.register(e);
+		Employee e = new Employee(employeeName, employeePassword);
+		int targetId = EService.register(e);
 
-		if (targetId != 0) {
+		log.info(targetId);
+		
+		if (targetId >= 0) {
 			PrintWriter pw = response.getWriter();
 			e.setEmployeeId(targetId);
 			log.info("New Employee: " + e);
@@ -449,7 +425,7 @@ public class RequestHelper {
 		tempEmployee.setEmployeeName(Employeename);
 		tempEmployee.setPassword(password);
 		
-		boolean isUpdated = Employeev.editEmployee(tempEmployee);
+		boolean isUpdated = EService.editEmployee(tempEmployee);
 
 		if (isUpdated) {
 			PrintWriter pw = response.getWriter();
@@ -498,7 +474,7 @@ public class RequestHelper {
 			
 			// 2. Get Manager in the Database by id
 			int id = Integer.parseInt(values.get(0));
-			Manager Manager = Managerv.findManagerById(id);
+			Manager Manager = MService.findManagerById(id);
 			
 			// 3. Turn the list of Java Objects into a JSON string (using Jackson Databind Object Mapper).
 			String json = om.writeValueAsString(Manager);
@@ -512,39 +488,45 @@ public class RequestHelper {
 	
 	public static void processNewManager(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		log.info("inside of request helper...process new Manager...");
-		BufferedReader reader = request.getReader();
-		StringBuilder s = new StringBuilder();
-
-		// we are just transferring our Reader data to our StringBuilder, line by line
-		String line = reader.readLine();
-		while (line != null) {
-			s.append(line);
-			line = reader.readLine();
-		}
-
-		String body = s.toString(); 
-		String [] sepByAmp = body.split("&"); 
+//		BufferedReader reader = request.getParameter();
+//		StringBuilder s = new StringBuilder();
+//
+//		// we are just transferring our Reader data to our StringBuilder, line by line
+//		String line = reader.readLine();
+//		while (line != null) {
+//			s.append(line);
+//			line = reader.readLine();
+//		}
+//
+//		String body = s.toString(); 
+//		
+//		log.info(body);
+//		String [] sepByAmp = body.split("&"); 
+//		
+//		List<String> values = new ArrayList<String>();
+//		
+//		for (String pair : sepByAmp) { 
+//			values.add(pair.substring(pair.indexOf("=") + 1)); 
+//		}
 		
-		List<String> values = new ArrayList<String>();
-		List<Integer> ovalues = new ArrayList<Integer>();
 		
-		for (String pair : sepByAmp) { 
-			values.add(pair.substring(pair.indexOf("=") + 1)); 
-		}
-		log.info("Ticket attempted to register with information:\n " + body);
 		// capture the actual Employeename and password values
-		int managerId = ovalues.get(0);
-		String managerName = values.get(1);
-		String managerPassword = values.get(2);
-		String managerFirstName = values.get(3); 
-		String managerLastName = values.get(4); 
+		String managerName = request.getParameter("managerName");
+		String managerPassword = request.getParameter("managerPassword");
+		String managerFirstName = request.getParameter("firstName");
+		String managerLastName = request.getParameter("lastName"); 
+		
+		log.info("Ticket attempted to register with information:\n " + 
+				managerName + ", " +
+				managerPassword + ", " +
+				managerFirstName + ", " +
+				managerLastName);
 		
 		
-		
-		Manager m = new Manager(managerId, managerName, managerPassword, managerFirstName, managerLastName);
-		int targetId = Managerv.register(m);
+		Manager m = new Manager(managerName, managerPassword, managerFirstName, managerLastName);
+		int targetId = MService.register(m);
 
-		if (targetId != 0) {
+		if (targetId >= 0) {
 			PrintWriter pw = response.getWriter();
 			m.setManagerId(targetId);
 			log.info("New Manager: " + m);
@@ -600,7 +582,7 @@ public class RequestHelper {
 		tempManager.setLastName(managerLastName);
 		
 		
-		boolean isUpdated = Managerv.editManager(tempManager);
+		boolean isUpdated = MService.editManager(tempManager);
 
 		if (isUpdated) {
 			PrintWriter pw = response.getWriter();

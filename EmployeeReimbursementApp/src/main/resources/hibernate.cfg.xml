@@ -8,7 +8,7 @@
   
         <!-- Connection settings -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/EmployeeReimburseApp</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5433/EmployeeReimburseApp</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">postgres</property>
   
@@ -29,9 +29,26 @@
         <mapping class="com.revature.models.Employee"/>
         <mapping class="com.revature.models.Manager"/>
         <mapping class="com.revature.models.ERSMain"/>
-        <mapping class="com.revature.models.ERSPending"/>
-        <mapping class="com.revature.models.ERSApproved"/>
-        <mapping class="com.revature.models.ERSDenied"/>
+        
          
     </session-factory>
 </hibernate-configuration>
+<!-- 
+<hibernate-mapping>
+   <class name = "Employee" table = "Employees">
+      
+      <meta attribute = "class-description">
+         This class contains the employee detail. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "id">
+         <generator class="native"/>
+      </id>
+      
+      <property name = "firstName" column = "first_name" type = "string"/>
+      <property name = "lastName" column = "last_name" type = "string"/>
+      <property name = "salary" column = "salary" type = "int"/>
+      
+   </class>
+</hibernate-mapping>
+ -->
